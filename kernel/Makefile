@@ -14,7 +14,7 @@ kernel.elf:	$(OBJECTS)
 
 .PHONY: depend
 depend:
-	$(MAKEDEPEND) -- $(CFLAGS) -- $(ALL_C_FILES)
+	$(MAKEDEPEND) -- $(CFLAGS) -- $(CSOURCES)
 
 .PHONY: clean
 clean:
@@ -23,3 +23,5 @@ clean:
 
 # Generated code (makedepend) ahead!
 # DO NOT DELETE
+
+src/heap.o: include/click.h include/heap.h

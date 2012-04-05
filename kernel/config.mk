@@ -43,6 +43,7 @@ endif
 
 ifeq ($(ARCH), armv7-a)
 ELF_FORMAT	= elf32-littlearm
+DEFINES		+= WORD_SIZE=4
 endif
 
 ifeq ($(BOOTLOADER), u-boot)
