@@ -1,5 +1,4 @@
 include config.mk
-include depend.mk
 
 IDIR		= include
 SRCDIR		= src
@@ -15,9 +14,12 @@ kernel.elf:	$(OBJECTS)
 
 .PHONY: depend
 depend:
-	$(MAKEDEPEND) -- $(CFLAGS) -- -f$@ $(ALL_C_FILES)
+	$(MAKEDEPEND) -- $(CFLAGS) -- $(ALL_C_FILES)
 
 .PHONY: clean
 clean:
 	rm -f $(OUTPUTS)
+
+
+# Generated code (makedepend) ahead!
 # DO NOT DELETE
