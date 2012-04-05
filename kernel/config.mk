@@ -13,19 +13,23 @@ endif
 CFLAGS		= -nostdlib -nostdinc -ffreestanding \
 			$(patsubst %,-D%,$(C_DEFINES)) \
 			-I$(IDIR) -march=$(ARCH) -mtune=$(CPU) -mfpu=$(FPU)
-ASFLAGS		=  -EL -I$(IDIR) -march=$(ARCH) -mtune=$(CPU) -mfpu=$(FPU)
-LDFLAGS		= $(patsubst %,--defsym%,$(SYM_DEFINES))
-C_DEFINES	= 
-SYM_DEFINES	=
+ASFLAGS		=  $(patsubst %,--defsym%,$(ASM_DEFINES)) \
+		   -EL -I$(IDIR) -march=$(ARCH) -mtune=$(CPU) -mfpu=$(FPU)
+LDFLAGS		=
+
+DEFINES		=
+C_DEFINES	= $(DEFINES)
+ASM_DEFINES	= $(DEFINES)
 
 ifdef DEBUG
 CFLAGS		+= -g
 ASFLAGS		+= -g
 LDFLAGS		+= -g
+DEFINES		+= DEBUG=1
 endif
 
 ifeq ($(BOARD), beaglebone)
-C_DEFINES	+= BOARD_BEAGLEBONE
+DEFINES		+= BOARD_BEAGLEBONE=1
 SOC		= am335x
 else
 $(error Katari is currently only compatible with the BeagleBone!)
@@ -43,6 +47,7 @@ endif
 
 ifeq ($(BOOTLOADER), u-boot)
 LINKERSCRIPT    = linkerscripts/$(SOC)_u-boot.ld
+DEFINES		+= BOOTLOADER_UBOOT=1
 else
 $(error Katari is currently only compatible with Das U-Boot.)
 endif
