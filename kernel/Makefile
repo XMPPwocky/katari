@@ -5,6 +5,7 @@ IDIR		= include
 SRCDIR		= src
 
 CSOURCES	= $(wildcard $(SRCDIR)/*.c)
+ASMSOURCES	= $(wildcard $(SRCDIR)/*.S)
 OBJECTS		= $(CSOURCES:.c=.o) $(ASMSOURCES:.S=.o)
 
 OUTPUTS		= $(OBJECTS) kernel.elf
