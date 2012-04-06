@@ -23,5 +23,3 @@ clean:
 
 # Generated code (makedepend) ahead!
 # DO NOT DELETE
-
-src/heap.o: include/click.h include/heap.h
