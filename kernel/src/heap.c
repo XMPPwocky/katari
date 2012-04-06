@@ -77,7 +77,30 @@ void *kalloc(click_t size) {
 	return NULL;
 };
 
-#warning	kfree() unimplemented! Memory leak? Definitely yes.
 void kfree(void *ptr) {
-	return;
+	/* We may want to build a hash table of addresses to heap regions
+	 * to speed up freeing (right now we have to walk the heap region list */
+	struct HeapRegion *current_region;
+	for (current_region = heap; current_region != NULL; current_region = current_region->next_region) {
+		if (!((current_region->address < ptr) & \
+					(ptr < (void *)((char *)current_region->address + HEAP_REGION_SIZE)))) {
+			continue; /* this region doesn't contain ptr */
+		} else {
+			/* this region contains ptr */
+
+			ptrdiff_t byte_offset = (char *)ptr - (char *)current_region->address;
+			click_t start_click = byte_offset / CLICK_SIZE;
+
+			char click_data = current_region->click_data[start_click];
+			
+			click_t end_click;
+			for (end_click = start_click;
+					((end_click < CLICKS_PER_HEAP_REGION) & \
+					 (current_region->click_data[end_click] == click_data));
+					end_click++) {
+				current_region->click_data[end_click] = 0; /* mark click as free */
+			};
+
+		};
+	};
 };
