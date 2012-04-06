@@ -72,6 +72,8 @@ void *kalloc(click_t size) {
 			};
 		};
 
+		current_region = current_region->next_region;
+
 	};
 	return NULL;
 };
