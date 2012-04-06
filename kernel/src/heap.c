@@ -18,7 +18,7 @@ void new_heap_region(void *address) {
 void *kalloc(click_t size) {
 	struct HeapRegion *current_region = heap;
 
-	while (current_region != NULL) {
+	for (current_region = heap; current_region != NULL; current_region = current_region->next_region) {
 		register click_t i;
 
 		click_t run; /* track "runs" of free clicks */
@@ -72,7 +72,6 @@ void *kalloc(click_t size) {
 			};
 		};
 
-		current_region = current_region->next_region;
 
 	};
 	return NULL;
