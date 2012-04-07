@@ -1,7 +1,6 @@
 # USER CONFIG HERE
 
 BOARD		= beaglebone
-BOOTLOADER	= u-boot
 
 # END USER CONFIG
 # Don't make changes below this line unless you know what you're doing!
@@ -39,18 +38,12 @@ ifeq ($(SOC), am335x)
 CPU	= cortex-a8
 ARCH	= armv7-a
 FPU	= vfp3
+LINKERSCRIPT = linkerscripts/am335x.ld
 endif
 
 ifeq ($(ARCH), armv7-a)
 ELF_FORMAT	= elf32-littlearm
 DEFINES		+= WORD_SIZE=4
-endif
-
-ifeq ($(BOOTLOADER), u-boot)
-LINKERSCRIPT    = linkerscripts/$(SOC)_u-boot.ld
-DEFINES		+= BOOTLOADER_UBOOT=1
-else
-$(error Katari is currently only compatible with Das U-Boot.)
 endif
 
 AS              = $(CROSS_COMPILE)as

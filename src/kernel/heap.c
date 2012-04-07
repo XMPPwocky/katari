@@ -1,6 +1,6 @@
-#include "click.h"
-#include "heap.h"
-#include "util.h"
+#include "kernel/click.h"
+#include "kernel/heap.h"
+#include "stddef.h"
 
 /* We need statically allocated space for at least one region:
  * This is because of the way add_heap_region works (allocating heap space
