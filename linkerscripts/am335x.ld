@@ -11,6 +11,7 @@ MEMORY
 
 SECTIONS
 {
+	__loader_init = ORIGIN(ocmc);
 	.loader : { loader.o } > ocmc
 
 	.kernel : { kernel.o } > emif
