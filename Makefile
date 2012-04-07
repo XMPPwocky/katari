@@ -1,4 +1,5 @@
 include config.mk
+include depend.mk
 
 IDIR		= include
 SRCDIR		= src
@@ -23,14 +24,10 @@ loader.o: $(LOADEROBJECTS)
 
 .PHONY: depend
 depend:
-	$(MAKEDEPEND) -- $(CFLAGS) -- $(CSOURCES)
+	$(MAKEDEPEND) -f depend.mk -- $(CFLAGS) -- \
+		$(LOADERSOURCES) $(KERNELSOURCES)
 
 .PHONY: clean
 clean:
 	rm -f $(CLEANABLES)
 
-
-# Generated code (makedepend) ahead!
-# DO NOT DELETE
-
-src/heap.o: include/click.h include/heap.h
