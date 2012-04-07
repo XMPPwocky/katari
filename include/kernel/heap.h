@@ -18,8 +18,6 @@ struct HeapRegion {
 	struct HeapRegion *next_region;
 };
 
-extern struct HeapRegion *heap;
-
 extern void new_heap_region(void *address);
 
 extern void *kalloc(click_t size);
