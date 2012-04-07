@@ -5,13 +5,13 @@
 /* We need statically allocated space for at least one region:
  * This is because of the way add_heap_region works (allocating heap space
  * for the next heap region. */
-struct HeapRegion heap_initial_region; 
+static struct HeapRegion heap_initial_region; 
 
 /* Pointer to the current start of the heap region linked list */
-struct HeapRegion *heap = &heap_initial_region;
+static struct HeapRegion *heap = &heap_initial_region;
 
 /* And a pointer to the end */
-struct HeapRegion *heap_last_region = &heap_initial_region;
+static struct HeapRegion *heap_last_region = &heap_initial_region;
 
 void new_heap_region(void *address) {
 	/* Add a new heap region */
@@ -31,6 +31,7 @@ void new_heap_region(void *address) {
 	new_region->next_region = NULL;
 
 	heap_last_region->next_region = new_region;
+	heap_last_region = new_region;
 };
 	
 void *kalloc(click_t size) {
