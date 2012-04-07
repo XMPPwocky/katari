@@ -10,9 +10,28 @@ struct HeapRegion heap_initial_region;
 /* Pointer to the current start of the heap region linked list */
 struct HeapRegion *heap = &heap_initial_region;
 
-#warning	new_heap_region() unimplemented!
 void new_heap_region(void *address) {
-	return;
+	/* Add a new heap region */
+
+
+	/* First, find the current last region */
+	struct HeapRegion *last;
+	for (last = heap; last != NULL; last = last->next_region) {
+		; /* all the action is in the for */
+	};
+
+	/* Now, allocate a new HeapRegion */
+	/* This is why we need at least one statically allocated region */
+	struct HeapRegion *new_region = (struct HeapRegion *)kalloc((sizeof (struct HeapRegion)) / CLICK_SIZE);
+	
+	/* Zero its click_data (mark all clicks as free */
+	click_t i;
+	for (i = 0; i < CLICKS_PER_HEAP_REGION; i++) {
+		new_region->click_data[i] = 0;
+	};
+
+	new_region->address = address;
+	new_region->next_region = NULL;
 };
 	
 void *kalloc(click_t size) {
