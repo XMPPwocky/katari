@@ -2,7 +2,10 @@ ENTRY(__loader_init)
 
 MEMORY
 {
-	ocmc : ORIGIN = 0x40300000, LENGTH = 64K
+	/* The first two words here may have to be a special header
+	 * containing the image size and destination address.
+	 * TODO: Implement that. */
+	bootimage : ORIGIN = 0x402F0000, LENGTH = 110K
 
 	/* note: this is the /maximum/ size- 1024M of ram is
 	 * unlikely to actually be present. */
@@ -11,8 +14,8 @@ MEMORY
 
 SECTIONS
 {
-	__loader_init = ORIGIN(ocmc);
-	.loader : { loader.o } > ocmc
+	__loader_init = ORIGIN(bootimage);
+	.loader : { loader.o(.text .data .bss) } > bootimage
 
-	.kernel : { kernel.o } > emif
+	.kernel : { kernel.o(.text .data .bss) } > emif
 }	

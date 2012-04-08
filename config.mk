@@ -11,10 +11,13 @@ endif
 
 CFLAGS		= -nostdlib -nostdinc -ffreestanding \
 			$(patsubst %,-D%,$(C_DEFINES)) \
-			-I$(IDIR) -march=$(ARCH) -mtune=$(CPU) -mfpu=$(FPU)
-ASFLAGS		=  $(patsubst %,--defsym%,$(ASM_DEFINES)) \
-		   -EL -I$(IDIR) -march=$(ARCH) -mtune=$(CPU) -mfpu=$(FPU)
-LDFLAGS		=
+			-I$(IDIR) -march=$(ARCH) -mtune=$(CPU) -mfpu=$(FPU) \
+			$(patsubst %,-Xassembler %, $(ASFLAGS)) \
+			$(patsubst %,-Xlinker %,$(LDFLAGS))
+
+ASFLAGS		= -EL -I$(IDIR) -march=$(ARCH) -mcpu=$(CPU) -mfpu=$(FPU)
+
+LDFLAGS		= $(patsubst %,--defsym%,$(SYM_DEFINES))
 
 DEFINES		=
 C_DEFINES	= $(DEFINES)
@@ -25,6 +28,8 @@ CFLAGS		+= -g
 ASFLAGS		+= -g
 LDFLAGS		+= -g
 DEFINES		+= DEBUG=1
+else
+LDFLAGS		+= --strip-debug
 endif
 
 ifeq ($(BOARD), beaglebone)
@@ -49,6 +54,8 @@ endif
 AS              = $(CROSS_COMPILE)as
 CC              = $(CROSS_COMPILE)gcc
 LD              = $(CROSS_COMPILE)ld
+export		AS CC LD
+OBJCOPY		= $(CROSS_COMPILE)objcopy
 TOUCH           = touch
 RM              = rm
 MAKEDEPEND      = makedepend
