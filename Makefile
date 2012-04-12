@@ -5,32 +5,23 @@ IDIR		= include
 SRCDIR		= src
 
 KERNELSOURCES	= $(wildcard $(SRCDIR)/kernel/*.c)
-LOADERSOURCES	= $(wildcard $(SRCDIR)/loader/*.c)
+KERNELASM	= $(wildcard $(SRCDIR)/kernel/*.S)
+KERNELOBJECTS	= $(KERNELSOURCES:.c=.o) $(KERNELASM:.S=.o)
 
-KERNELOBJECTS	= $(KERNELSOURCES:.c=.o)
-LOADEROBJECTS	= $(LOADERSOURCES:.c=.o)
+CLEANABLES		= $(KERNELOBJECTS) \
+		  kernel.elf kernel.bin
 
-CLEANABLES		= $(KERNELOBJECTS) $(LOADEROBJECTS) \
-		  loader.o kernel.o katari.elf loader.bin kernel.bin
+kernel.bin:	kernel.elf
+	$(OBJCOPY) -I $(ELF_FORMAT) -O binary $< $@
 
-katari.elf:	loader.o kernel.o
-	$(LD) $(LDFLAGS) -T $(LINKERSCRIPT) $^ -b $(ELF_FORMAT) -o $@
-
-loader.bin:	katari.elf
-	$(OBJCOPY) -I $(ELF_FORMAT) -O binary --only-section .loader $< $@
-
-kernel.bin:	katari.elf
-	$(OBJCOPY) -I $(ELF_FORMAT) -O binary --only-section .kernel $< $@
-kernel.o: $(KERNELOBJECTS)
-	$(LD) $(LDFLAGS) -i $^ -o $@
-
-loader.o: $(LOADEROBJECTS)
-	$(LD) $(LDFLAGS) -i $^ -o $@
+kernel.elf: $(KERNELOBJECTS)
+	$(LD) $(LDFLAGS) -T $(SRCDIR)/kernel/linkerscript.ld \
+		-b $(ELF_FORMAT) $^ -o $@
 
 .PHONY: depend
 depend:
 	$(MAKEDEPEND) -f depend.mk -- $(CFLAGS) -- \
-		$(LOADERSOURCES) $(KERNELSOURCES)
+		$(KERNELSOURCES)
 
 .PHONY: clean
 clean:

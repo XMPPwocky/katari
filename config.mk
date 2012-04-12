@@ -1,6 +1,7 @@
 # USER CONFIG HERE
 
 BOARD		= beaglebone
+DEBUG		= 1
 
 # END USER CONFIG
 # Don't make changes below this line unless you know what you're doing!
@@ -10,18 +11,19 @@ $(warning No cross-compilation prefix given, using default utilities...)
 endif
 
 CFLAGS		= -nostdlib -nostdinc -ffreestanding \
+			-Wall -Wextra \
 			$(patsubst %,-D%,$(C_DEFINES)) \
 			-I$(IDIR) -march=$(ARCH) -mtune=$(CPU) -mfpu=$(FPU) \
 			$(patsubst %,-Xassembler %, $(ASFLAGS)) \
 			$(patsubst %,-Xlinker %,$(LDFLAGS))
 
-ASFLAGS		= -EL -I$(IDIR) -march=$(ARCH) -mcpu=$(CPU) -mfpu=$(FPU)
+ASFLAGS		= -I$(IDIR) -march=$(ARCH) -mcpu=$(CPU) -mfpu=$(FPU)
 
-LDFLAGS		= $(patsubst %,--defsym%,$(SYM_DEFINES))
+LDFLAGS		= $(patsubst %,--defsym %,$(SYM_DEFINES))
 
 DEFINES		=
 C_DEFINES	= $(DEFINES)
-ASM_DEFINES	= $(DEFINES)
+SYM_DEFINES	= $(DEFINES)
 
 ifdef DEBUG
 CFLAGS		+= -g
@@ -43,7 +45,8 @@ ifeq ($(SOC), am335x)
 CPU	= cortex-a8
 ARCH	= armv7-a
 FPU	= vfp3
-LINKERSCRIPT = linkerscripts/am335x.ld
+DEFINES	+= SOC_AM335X=1
+SYM_DEFINES	+= __memory_start_addr=0x80000000 __memory_size=0x10000000
 endif
 
 ifeq ($(ARCH), armv7-a)

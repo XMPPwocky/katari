@@ -5,13 +5,44 @@
 /* We need statically allocated space for at least one region:
  * This is because of the way add_heap_region works (allocating heap space
  * for the next heap region. */
-static struct HeapRegion heap_initial_region; 
+static char heap_initial_region_data[HEAP_REGION_SIZE];
+static struct HeapRegion heap_initial_region;
 
 /* Pointer to the current start of the heap region linked list */
 static struct HeapRegion *heap = &heap_initial_region;
 
 /* And a pointer to the end */
 static struct HeapRegion *heap_last_region = &heap_initial_region;
+
+void heap_init(void *heap_start, size_t heap_size) {
+	/* First, set up the initial region. */
+
+	/* Set its address */
+	heap_initial_region.address = (void *)&heap_initial_region_data[0];
+
+	/* Zero its click data */
+	click_t i;
+	for (i = 0; i < CLICKS_PER_HEAP_REGION; i++) {
+		heap_initial_region.click_data[i] = 0;
+	};
+	
+	/* And, since for now it's the only region... */
+	heap_initial_region.next_region = NULL;
+
+	/* Now use the rest of the memory we got. */
+	add_memory_to_heap(heap_start, heap_size);
+};
+	
+void add_memory_to_heap(void *start, size_t size) {
+	size_t num_regions = size/HEAP_REGION_SIZE;
+
+	size_t i;
+	void *pos = start;
+	for (i = 0; i < num_regions; i++) {
+		new_heap_region(pos);
+		pos = (void *)((char *)pos)+HEAP_REGION_SIZE;
+	};
+};
 
 void new_heap_region(void *address) {
 	/* Add a new heap region */
