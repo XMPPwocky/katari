@@ -1,5 +1,4 @@
 include config.mk
-include depend.mk
 
 IDIR		= include
 SRCDIR		= src
@@ -10,6 +9,9 @@ KERNELOBJECTS	= $(KERNELSOURCES:.c=.o) $(KERNELASM:.S=.o)
 
 CLEANABLES		= $(KERNELOBJECTS) \
 		  kernel.elf kernel.bin
+
+.PHONY:	build
+build:	kernel.bin
 
 kernel.bin:	kernel.elf
 	$(OBJCOPY) -I $(ELF_FORMAT) -O binary $< $@
@@ -27,3 +29,5 @@ depend:
 clean:
 	rm -f $(CLEANABLES)
 
+
+include depend.mk
