@@ -3,7 +3,7 @@
 #include "kernel/kernel.h"
 #include "kernel/click.h"
 
-#define	HEAP_REGION_SIZE	65536 /* 64K */
+#define	HEAP_REGION_SIZE	1048576 /* 1M */
 #define	CLICKS_PER_HEAP_REGION	(HEAP_REGION_SIZE/CLICK_SIZE)
 
 struct HeapRegion {

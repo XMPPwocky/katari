@@ -1,4 +1,4 @@
 #pragma once
 
-#define	CLICK_SIZE	128 
+#define	CLICK_SIZE	1024 
 typedef unsigned short click_t;
