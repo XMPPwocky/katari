@@ -11,8 +11,20 @@ gothread:
 	/* save current thread's return state */
 	mov	r4, r0
 	srsdb	sp!, #0x13 
-	bl	leavethread
+	bl	leavethread /* save registers */
 	mov	r0, r4
+
+	/* find the current thread to save its sp */
+	mrc	p15, 0, r1, c13, c0, 3 /* get TID */
+	mov	r2, #4 /* 4 bytes for a pointer to struct Thread */
+	mul	r1, r2, r1 /* turn TID into an offset */
+	ldr	r2, =thread_table
+	add	r2, r2, r1 /* index into the thread table to get a pointer */
+	str	sp, [r2] /* aand store our sp into the struct */
+
+	/* done saving current thread, now restore state from new thread */
+	ldr	r1, [r0, #4] /* Get the new thread's TID */
+	mcr	p15, 0, r1, c13, c0, 3 /* save it in the thread ID register */
 
 	ldr	sp, [r0] /* use new thread's stack */
 	
