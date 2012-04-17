@@ -14,17 +14,3 @@ struct Thread {
 extern struct Thread *threadtable[MAX_THREADS];
 
 extern void threadtable_init(void);
-
-
-/* asm */
-
-
-/* enterthread() is a funny sort of function
- * it switches to another thread and acts as if that thread's enterthread()
- * or gothread() call has returned (eg, popping registers and bx lr). The 
- * return value is the thread ID of the thread that called it.
- * Think about it and read the code- it makes sense. */
-extern tid_t enterthread(struct Thread *t);
-
-/* Handles the dirty work of actually restoring registers. */
-extern tid_t gothread(struct Thread *t);
