@@ -59,6 +59,40 @@ savestate:
 	bx	lr
 
 
+.arm
+.section .text
+.align 2
+.global thread_state_init
+/* Initializes a new thread's state.
+ * r0: struct Thread *t
+ * r1: value of thread LR (restored to PC when thread runs)
+ * r2: value of thread CPSR
+ */
+thread_state_init:
+	mov	r3, sp /* save original SP */
+	ldr	sp, [r0] /* load new SP */
+
+	push	{r1, r2} /* new LR and CPSR */
+
+	ldr	r1, =0 /* initial value for registers */
+	push	{r1} /* value of r0 */
+	push	{r1} /* r1 */
+	push	{r1} /* r2 */
+	push	{r1} /* r3 */
+	push	{r1} /* r4 */
+	push	{r1} /* r5 */
+	push	{r1} /* r6 */
+	push	{r1} /* r7 */
+	push	{r1} /* r8 */
+	push	{r1} /* r9 */
+	push	{r1} /* r10 */
+	push	{r1} /* r11 */
+	push	{r1} /* r12 */
+
+	mov	sp, r3 /* restore original SP */
+
+	bx	lr
+
 /* These getters and setters must ONLY be used after a savestate for the thread
  * itself, and before switching away from the thread (which saves kernel state
  * instead. */
