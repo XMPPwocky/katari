@@ -9,8 +9,9 @@
  */
 yieldtothread:
 	/* save current thread's return state */
+	mrs	r1, cpsr
+	push	{lr, r1}
 	mov	r4, r0
-	srsdb	sp!, #0x13 
 	bl	savestate /* save registers */
 	mov	r0, r4
 
@@ -34,13 +35,11 @@ yieldtothread:
  * We may be in any mode when we get here.
  * BEFORE CALLING THIS from an exception handler, do
  *	sub	lr, lr, #mode_specific_offset
- * to make the lr point to where it should.
+ *	srsdb   sp!, #0x13
+ * to make the lr point to where it should and save the SPSR and LR
  * Read the ARM ARM for the proper value of mode_specific_offset. Do this
  * before srsdb.
-
- * BEFORE CALLING THIS from ANYTHING, do
- *	srsdb   sp!, #0x13
- * to save the SPSR and LR.
+ * BEFORE CALLING THIS manually, push the lr and cpsr.
  */
 savestate:
 	/* Clear any exclusive accesses this CPU holds. */
@@ -59,6 +58,10 @@ savestate:
 
 	bx	lr
 
+
+/* These getters and setters must ONLY be used after a savestate for the thread
+ * itself, and before switching away from the thread (which saves kernel state
+ * instead. */
 
 .arm
 .section .text
