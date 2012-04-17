@@ -74,7 +74,7 @@ thread_getreg:
 	add	r1, r1, #2 /* skip over return state */
 	mov	r2, #4 /* bytes per word (length of stored register) */
 	mul	r1, r2, r1 /* calculate an offset from thread sp */
-	sub	r0, r0, r1 /* use it */
+	add	r0, r0, r1 /* use it */
 
 	ldr	r0, [r0] /* aaand get the value */
 
@@ -94,8 +94,7 @@ thread_setreg:
 	add	r1, r1, #2
 	mov	r2, #4
 	mul	r1, r2, r1
-	sub	r0, r0, r1
-	sub	r0, r0, #4
+	add	r0, r0, r1
 
 	str	r2, [r1]
 
