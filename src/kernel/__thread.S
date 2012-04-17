@@ -3,15 +3,15 @@
 .arm
 .section .text
 .align 2
-.global gothread
+.global yieldtothread
 /* Yields to a thread.
  * r0: struct Thread *thread
  */
-gothread:
+yieldtothread:
 	/* save current thread's return state */
 	mov	r4, r0
 	srsdb	sp!, #0x13 
-	bl	leavethread /* save registers */
+	bl	savestate /* save registers */
 	mov	r0, r4
 
 	/* find the current thread to save its sp */
@@ -32,17 +32,21 @@ gothread:
 .arm
 .section .text
 .align 2
-.global leavethread
-/* This is called by all exception handlers.
- * It saves the thread state and does other things needed on a context switch.
- * We may be in any exception mode when we get here.
+.global saveme
+/* This is called by all exception handlers and by yieldtothread.
+ * It saves the state of the current thread to the current stack.
+ * We may be in any mode when we get here.
  * BEFORE CALLING THIS from an exception handler, do
  *	sub	lr, lr, #mode_specific_offset
+ * to make the lr point to where it should.
+ * Read the ARM ARM for the proper value of mode_specific_offset. Do this
+ * before srsdb.
+
+ * BEFORE CALLING THIS from ANYTHING, do
  *	srsdb   sp!, #0x13
- * to save the SPSR and LR. Read the ARM ARM for the proper value of
- * mode_specific_offset.
+ * to save the SPSR and LR.
  */
-leavethread:
+savestate:
 	/* Clear any exclusive accesses this CPU holds. */
 	clrex
 
