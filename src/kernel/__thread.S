@@ -14,10 +14,6 @@ yieldtothread:
 	bl	savestate /* save registers */
 	mov	r0, r4
 
-	/* find the current thread to save its sp */
-	mrc	p15, 0, r1, c13, c0, 4 /* get thread pointer from ID register */
-	str	sp, [r0] /* save sp */
-
 	/* done saving current thread, now restore state from new thread */
 	mcr	p15, 0, r0, c13, c0, 4 /* save thread pointer to ID register */
 
@@ -55,6 +51,105 @@ savestate:
 	BARRIER
 	
 	stmdb	sp, {r0-r14}^
-	add	sp, sp, #4*15
+	sub	sp, sp, #4*15
 
-	bx	lr /* return to the handler, let it do its thing */
+	/* save the sp into the thread struct */
+	mrc     p15, 0, r0, c13, c0, 4 /* get a pointer to the struct */
+	str	sp, [r0]  /* save sp */
+
+	bx	lr
+
+
+.arm
+.section .text
+.align 2
+.global thread_getreg
+/* Get the value of a thread's register.
+ * r0: struct Thread *t
+ * r1: 0 through 14 for the register to get
+ * RETURN: r0, value of the selected register */
+thread_getreg:
+	ldr	r0, [r0] /* get thread stack */
+
+	add	r1, r1, #2 /* skip over return state */
+	mov	r2, #4 /* bytes per word (length of stored register) */
+	mul	r1, r2, r1 /* calculate an offset from thread sp */
+	sub	r0, r0, r1 /* use it */
+
+	ldr	r0, [r0] /* aaand get the value */
+
+	bx	lr /* if you don't know what this does, get out of my asm */
+
+.arm
+.section .text
+.align 2
+.global thread_setreg
+/* Set a thread's register
+ * r0: struct Thread *t
+ * r1: register to set, 0 through 14
+ * r2: value to set it to */
+thread_setreg:
+	ldr	r0, [r0]
+
+	add	r1, r1, #2
+	mov	r2, #4
+	mul	r1, r2, r1
+	sub	r0, r0, r1
+	sub	r0, r0, #4
+
+	str	r2, [r1]
+
+	bx lr
+
+.arm
+.section .text
+.align 2
+.global thread_getcpsr
+/* Get a thread's CPSR.
+ * r0: struct Thread *t
+ * RETURN: r0: thread's CPSR. Duh. */
+thread_getcpsr:
+	ldr	r0, [r0]
+	ldr	r0, [r0, #4] /* offset of 4 bytes skips the lr value */
+
+	bx	lr
+
+.arm
+.section .text
+.align 2
+.global thread_setcpsr
+/* Set a thread's CPSR.
+ * r0: struct Thread *t
+ * r1: new CPSR value. */
+thread_setcpsr:
+	ldr	r0, [r0]
+	str	r1, [r0, #4]
+
+
+	bx	lr
+
+.arm
+.section .text
+.align 2
+.global thread_getlr
+/* Get a thread's LR.
+ * r0: struct Thread *t
+ * RETURN: r0: thread's LR. */
+thread_getlr:
+	ldr	r0, [r0]
+	ldr	r0, [r0]
+
+	bx	lr
+
+.arm
+.section .text
+.align 2
+.global thread_setlr
+/* Set a thread's LR.
+ * r0: struct Thread *t
+ * r1: new LR value. */
+thread_setlr:
+	ldr	r0, [r0]
+	str	r1, [r0]
+
+	bx	lr
