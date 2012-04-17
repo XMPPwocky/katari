@@ -10,7 +10,7 @@ ifndef CROSS_COMPILE
 $(warning No cross-compilation prefix given, using default utilities...)
 endif
 
-CFLAGS		= -nostdlib -nostdinc -ffreestanding \
+CFLAGS		= -nostdlib -nostdinc --no-builtin -ffreestanding \
 			-Wall -Wextra \
 			$(patsubst %,-D%,$(C_DEFINES)) \
 			-I$(IDIR) -march=$(ARCH) -mtune=$(CPU) -mfpu=$(FPU) \
