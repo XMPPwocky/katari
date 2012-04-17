@@ -32,7 +32,7 @@ yieldtothread:
 .arm
 .section .text
 .align 2
-.global saveme
+.global savestate
 /* This is called by all exception handlers and by yieldtothread.
  * It saves the state of the current thread to the current stack.
  * We may be in any mode when we get here.
