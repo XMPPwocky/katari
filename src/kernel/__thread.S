@@ -20,6 +20,7 @@
  * to save important state, some of which is overwritten
  * by function calls (specifically, LR.) */
 thread_leave:
+	clrex /* Reset any address lock the thread might have gotten */
 	cpsid	if, 0x13 /* enter Supervisor mode */
 	BARRIER
 
