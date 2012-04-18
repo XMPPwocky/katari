@@ -40,7 +40,7 @@ thread_leave:
 /* Enters a thread. Duh.
  * r0: struct Thread *thread
  * RETURN: r0: why we returned,
- * (one of the EXCEPTION_FOOs in kernel/exceptions.i)
+ * (one of the EXCEPTION_FOOs in kernel/exceptions.[ih])
  * Note that this function secretly never returns, but exception handlers
  * pretend that it does. */
 thread_enter:
