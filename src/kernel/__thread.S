@@ -1,7 +1,7 @@
 /* Low-level functions dealing with threads. */
 
 .include "kernel/barrier.i"
-.include "kernel/exceptions.i"
+.include "kernel/exception.i"
 
 /* a bit of background:
  * Before switching to a thread, the current SP_svc is moved into the ARMv7
