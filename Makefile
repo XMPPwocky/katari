@@ -22,8 +22,8 @@ kernel.elf: $(KERNELOBJECTS)
 
 .PHONY: depend
 depend:
-	$(MAKEDEPEND) -f depend.mk -- $(CFLAGS) -- \
-		$(KERNELSOURCES)
+	$(MAKEDEPEND) -f depend.mk -- $(patsubst %,-%,$(subst -,,$(CFLAGS))) \
+		-- $(KERNELSOURCES)
 
 .PHONY: clean
 clean:

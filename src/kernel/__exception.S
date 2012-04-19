@@ -38,7 +38,7 @@ exception_handler_und:
 .global exception_handler_svc
 exception_handler_svc:
 	srsia	sp!, #0x13
-	bl	thread_leave
+	bl	leave_thread
 	ldr	r0, =EXCEPTION_SVC
 	pop	{r4-r12, pc}
 

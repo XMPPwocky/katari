@@ -3,6 +3,6 @@
 .align 2
 .global dostuff
 dostuff:
-	mov	r0, #0
+	mov	r1, #0
 	cps	#16
 	svc	#0

@@ -1,6 +1,4 @@
-#include "kernel/click.h"
-#include "kernel/heap.h"
-#include "stddef.h"
+#include "kernel/kernel.h"
 
 /* We need statically allocated space for at least one region:
  * This is because of the way add_heap_region works (allocating heap space
@@ -125,6 +123,10 @@ void *kalloc(click_t size) {
 
 	};
 	return NULL;
+};
+
+void *kmalloc(size_t size) {
+	return kalloc((size+CLICK_SIZE-1)/CLICK_SIZE);
 };
 
 void kfree(void *ptr) {

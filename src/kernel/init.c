@@ -1,6 +1,9 @@
 #include "kernel/kernel.h"
 #include "kernel/exception.h"
+#include "kernel/thread.h"
 #include "kernel/util.h"
+
+extern void dostuff(void);
 
 /* Linkerscript-defined symbols
  * Their values HAVE NO MEANING.
@@ -20,9 +23,15 @@ void init(void) {
 	print("Initializing heap...\r\n");
 	heap_init(heap_start_addr, heap_size);
 
-	print("Printing numbers...\r\n");
-	char buf[32];
-	inttostr(-1, buf, 32);
-	print(buf);
-	print("\r\n");
+	print("Setting up thread table...\r\n");
+	threadtable_init();
+
+	print("Making new thread...\r\n");
+	tid_t thread = create_thread(0x13, &dostuff, 42);
+	print("Entering it...\r\n");
+	int i = enter_thread(thread_table[thread]);
+	if (i == EXCEPTION_SVC) {
+		print("Thread did SVC\r\n");
+	};
+	print("Bye!\r\n");
 };

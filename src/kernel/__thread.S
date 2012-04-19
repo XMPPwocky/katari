@@ -12,14 +12,14 @@
 .arm
 .section .text
 .align 2
-.global thread_leave
+.global leave_thread
 /* Saves thread's state (and restores kernel stack).
  * Meant to be called immediately after taking an exception-
  * HOWEVER! BEFORE YOU CALL THIS, do a
  *	srsia	sp!, 0x13
  * to save important state, some of which is overwritten
  * by function calls (specifically, LR.) */
-thread_leave:
+leave_thread:
 	clrex /* Reset any address lock the thread might have gotten */
 	cpsid	if, 0x13 /* enter Supervisor mode */
 	BARRIER
@@ -36,14 +36,14 @@ thread_leave:
 .arm
 .section .text
 .align 2
-.global thread_enter
+.global enter_thread
 /* Enters a thread. Duh.
  * r0: struct Thread *thread
  * RETURN: r0: why we returned,
  * (one of the EXCEPTION_FOOs in kernel/exceptions.[ih])
  * Note that this function secretly never returns, but exception handlers
  * pretend that it does. */
-thread_enter:
+enter_thread:
 	/* we're going to push a few things so that an exception handler can
 	 * pretend that we returned */
 	push	{r4-r12, lr}

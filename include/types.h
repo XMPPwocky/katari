@@ -16,3 +16,7 @@ typedef unsigned int uint32_t;
 typedef signed long long int64_t;
 typedef unsigned long long uint64_t;
 #endif
+
+#ifdef ARCH_ARMV7A
+typedef uint32_t register_t;
+#endif

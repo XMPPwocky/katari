@@ -24,4 +24,5 @@ extern void add_memory_to_heap(void *start, size_t size);
 extern void new_heap_region(void *address);
 
 extern void *kalloc(click_t size);
+extern void *kmalloc(size_t size);
 extern void kfree(void *ptr);
