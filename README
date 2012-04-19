@@ -1,1 +1,7 @@
-Katari is an OS and stuff.
+Katari is a nanokernel-based OS for ARM.
+
+What works:
+ * Booting on AM335x(assisted by TI StarterWare bootloader)
+ * Printing to serial on AM335x (currently in kernel for debugging purposes,
+ 	will be removed soon)
+ * Context switching (needs significant work)
