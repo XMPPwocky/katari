@@ -5,3 +5,10 @@ What works:
  * Printing to serial on AM335x (currently in kernel for debugging purposes,
  	will be removed soon)
  * Context switching (needs significant work)
+
+What doesn't:
+ * Executable loading
+ * Floating point (VFP/NEON)
+ * Systems other than AM335x
+ * IPC, and syscalls in general
+ * Virtual memory
