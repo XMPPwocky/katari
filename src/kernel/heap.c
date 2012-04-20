@@ -99,9 +99,31 @@ void *kalloc(click_t size) {
 					};
 
 					/* Find a value for our click_data that doesn't clash with neighbors */
-					char our_click_data = prev_click_data + 1;
-					if (our_click_data == next_click_data) {
-						our_click_data++;
+					char our_click_data;
+					if (prev_click_data == 0) {
+						if (next_click_data == 1) {
+							our_click_data = 2;
+						} else {
+							our_click_data = 1;
+						};
+					} else if (prev_click_data == 1) {
+						if (next_click_data == 2) {
+							our_click_data = 3;
+						} else {
+							our_click_data = 2;
+						};
+					} else if (prev_click_data == 2) {
+						if (next_click_data == 1) {
+							our_click_data = 3;
+						} else {
+							our_click_data = 1;
+						};
+					} else {
+						if (next_click_data == 1) {
+							our_click_data = 2;
+						} else {
+							our_click_data = 3;
+						};
 					};
 
 					/* and- set our click_data for the run */
