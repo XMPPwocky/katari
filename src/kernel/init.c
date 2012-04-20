@@ -27,12 +27,18 @@ void init(void) {
 	threadtable_init();
 
 	print("Making new threads...\r\n");
-	tid_t thread1 = create_thread(0x13, (register_t)&dostuff, 'A');
-	tid_t thread2 = create_thread(0x13, (register_t)&dostuff, 'B');
+	struct Thread *thread1 = create_thread((register_t)&dostuff, 0x1F);
+	thread1->state->registers[13] = (int)((char *)kmalloc(8192) + 8192);
+	thread1->state->registers[13] -= (thread1->state->registers[13] % 8);
+	thread1->state->registers[0] = 0;
+	struct Thread *thread2 = create_thread((register_t)&dostuff, 0x1F);
+	thread2->state->registers[13] = (int)((char *)kmalloc(8192) + 8192);
+	thread2->state->registers[13] -= (thread2->state->registers[13] % 8);
+	thread2->state->registers[0] = 1;
 	int i;
 	while (true) {
 		print("Entering thread1...\r\n");
-		i = enter_thread(thread_table[thread1]);
+		i = enter_thread(thread1);
 		if (i == EXCEPTION_SVC) {
 			print("thread1 did SVC\r\n");
 		} else {
@@ -40,7 +46,7 @@ void init(void) {
 		};
 
 		print("Entering thread2...\r\n");
-		i = enter_thread(thread_table[thread2]);
+		i = enter_thread(thread2);
 		if (i == EXCEPTION_SVC) {
 			print("thread2 did SVC\r\n");
 		} else {

@@ -12,7 +12,7 @@ void threadtable_init(void) {
 	return;
 };
 
-tid_t create_thread(register_t lr, register_t cpsr, register_t r0) {
+struct Thread *create_thread(register_t lr, register_t cpsr) {
 	/* Find an available TID */
 	tid_t id;
 	bool found = false;
@@ -33,12 +33,10 @@ tid_t create_thread(register_t lr, register_t cpsr, register_t r0) {
 	thread->state->retstate[0] = lr;
 	thread->state->retstate[1] = cpsr;
 
-	thread->state->registers[0] = r0; /* initial r0 used for init., etc */
-
 	int i;
-	for (i = 1; i < 15; i++) { /* initialize the remaining 14 registers */
-		thread->state->registers[i] = 0xAA55; /* credit to Laksen */
+	for (i = 0; i < 15; i++) {
+		thread->state->registers[i] = 0xDEADBEEF;
 	};
 
-	return thread->id;
+	return thread;
 };

@@ -20,6 +20,6 @@ struct Thread {
 extern struct Thread *thread_table[MAX_THREADS];
 
 extern void threadtable_init(void);
-extern tid_t create_thread(register_t lr, register_t cpsr, register_t r0);
+extern struct Thread *create_thread(register_t lr, register_t cpsr);
 
 extern unsigned int enter_thread(struct Thread *t);

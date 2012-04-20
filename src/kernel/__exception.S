@@ -12,7 +12,7 @@ exception_init:
 	bx	lr
 
 .arm
-.align 4
+.align 7
 .section .text
 .global exception_vector
 exception_vector:

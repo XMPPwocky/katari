@@ -57,4 +57,4 @@ enter_thread:
 	ldmdb	sp, {r0-r14}^ /* restore user registers */
 	sub	sp, sp, #(4*15) /* ^ disables writeback so do it manually */
 
-	rfedb	sp /* whee! */
+	rfedb	sp! /* whee! */
