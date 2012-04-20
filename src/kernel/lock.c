@@ -1,9 +1,9 @@
 #include "kernel/kernel.h"
 
-bool semaphore_V(semaphore_t sem) {
-	return false;
+enum semaphore_op_result semaphore_V(semaphore_t sem) {
+	return SEMAPHORE_FAIL_OTHER;
 };
 
-bool semaphore_T(semaphore_t sem) {
-	return false;
+enum semaphore_op_result semaphore_T(semaphore_t sem) {
+	return SEMAPHORE_FAIL_OTHER;
 };
