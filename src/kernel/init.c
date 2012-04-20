@@ -26,26 +26,5 @@ void init(void) {
 	print("Setting up thread table...\r\n");
 	threadtable_init();
 
-	print("Making new threads...\r\n");
-	tid_t thread1 = create_thread(0x13, (register_t)&dostuff, 'A');
-	tid_t thread2 = create_thread(0x13, (register_t)&dostuff, 'B');
-	int i;
-	while (true) {
-		print("Entering thread1...\r\n");
-		i = enter_thread(thread_table[thread1]);
-		if (i == EXCEPTION_SVC) {
-			print("thread1 did SVC\r\n");
-		} else {
-			print("thread1 did something else\r\n");
-		};
-
-		print("Entering thread2...\r\n");
-		i = enter_thread(thread_table[thread2]);
-		if (i == EXCEPTION_SVC) {
-			print("thread2 did SVC\r\n");
-		} else {
-			print("thread2 did something else\r\n");
-		};
-	};
 	print("Bye!\r\n");
 };

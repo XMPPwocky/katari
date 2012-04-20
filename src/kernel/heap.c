@@ -69,7 +69,7 @@ void *kalloc(click_t size) {
 	for (current_region = heap; current_region != NULL; current_region = current_region->next_region) {
 		register click_t i;
 
-		click_t run; /* track "runs" of free clicks */
+		click_t run = 0; /* track "runs" of free clicks */
 
 		for (i = 0; i < CLICKS_PER_HEAP_REGION; i++) {
 			if (current_region->click_data[i] != 0) {
