@@ -11,5 +11,8 @@ enum semaphore_op_result {
 	SEMAPHORE_FAIL_OTHER
 };
 
-enum semaphore_op_result semaphore_V(semaphore_t sem);
-enum semaphore_op_result semaphore_P(semaphore_t sem);
+void semaphore_V(semaphore_t sem);
+void semaphore_T(semaphore_t sem);
+
+enum semaphore_op_result semaphore_try_V(semaphore_t sem);
+enum semaphore_op_result semaphore_try_P(semaphore_t sem);
