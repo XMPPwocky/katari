@@ -6,14 +6,17 @@
 static char heap_initial_region_data[HEAP_REGION_SIZE];
 static struct HeapRegion heap_initial_region;
 
-/* Pointer to the current start of the heap region linked list */
+/* Pointer to the current start of the heap region linked list... */
 static struct HeapRegion *heap = &heap_initial_region;
-
-/* And a pointer to the end */
+/* And a pointer to the end. */
 static struct HeapRegion *heap_last_region = &heap_initial_region;
 
+/* Lock for manipulating any HeapRegion in the HeapRegion linked list. */
+semaphore_t heap_lock = 0; /* Not set up yet, so lock it for safety. */
+
 void heap_init(void *heap_start, size_t heap_size) {
-	/* First, set up the initial region. */
+	/* Set up the initial region. */
+	/* Don't get the lock because heap isn't set up yet (already locked) */
 
 	/* Set its address */
 	heap_initial_region.address = (void *)&heap_initial_region_data[0];
@@ -26,6 +29,9 @@ void heap_init(void *heap_start, size_t heap_size) {
 	
 	/* And, since for now it's the only region... */
 	heap_initial_region.next_region = NULL;
+
+	/* Now that the heap is usable, do a V on the heap_lock. */
+	semaphore_V(heap_lock);
 
 	/* Now use the rest of the memory we got. */
 	add_memory_to_heap(heap_start, heap_size);
@@ -43,8 +49,9 @@ void add_memory_to_heap(void *start, size_t size) {
 };
 
 void new_heap_region(void *address) {
+	semaphore_P(heap_lock);
+	
 	/* Add a new heap region */
-
 
 	/* Allocate a new HeapRegion */
 	/* This is why we need at least one statically allocated region */
@@ -59,11 +66,16 @@ void new_heap_region(void *address) {
 	new_region->address = address;
 	new_region->next_region = NULL;
 
+	/* Get the lock so we can manipulate regions in the list. */
 	heap_last_region->next_region = new_region;
 	heap_last_region = new_region;
+
+	semaphore_V(heap_lock);
 };
 	
 void *kalloc(click_t size) {
+	semaphore_P(heap_lock);
+
 	struct HeapRegion *current_region = heap;
 
 	for (current_region = heap; current_region != NULL; current_region = current_region->next_region) {
@@ -133,6 +145,8 @@ void *kalloc(click_t size) {
 					};
 
 					/* Ta-da! We've allocated memory! */
+					/* release lock */
+					semaphore_V(heap_lock);
 					return (void *)((char *)current_region->address + (run_start * CLICK_SIZE));
 
 				} else {
@@ -144,6 +158,9 @@ void *kalloc(click_t size) {
 
 
 	};
+
+	semaphore_V(heap_lock);
+
 	return NULL;
 };
 
@@ -153,7 +170,11 @@ void *kmalloc(size_t size) {
 
 void kfree(void *ptr) {
 	/* We may want to build a hash table of addresses to heap regions
-	 * to speed up freeing (right now we have to walk the heap region list */
+	 * to speed up freeing
+	 * (right now we have to walk the heap region list */
+
+	semaphore_P(heap_lock);
+
 	struct HeapRegion *current_region;
 	for (current_region = heap; current_region != NULL; current_region = current_region->next_region) {
 		if (!((current_region->address < ptr) & \
@@ -177,4 +198,6 @@ void kfree(void *ptr) {
 
 		};
 	};
+
+	semaphore_V(heap_lock);
 };
