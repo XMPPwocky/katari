@@ -36,14 +36,14 @@ leave_thread:
 .arm
 .section .text
 .align 2
-.global enter_thread
+.global _enter_thread
 /* Enters a thread. Duh.
  * r0: struct Thread *thread
  * RETURN: r0: why we returned,
  * (one of the EXCEPTION_FOOs in kernel/exceptions.[ih])
  * Note that this function secretly never returns, but exception handlers
  * pretend that it does. */
-enter_thread:
+_enter_thread:
 	/* we're going to push a few things so that an exception handler can
 	 * pretend that we returned */
 	push	{r4-r12, lr}
