@@ -20,6 +20,9 @@ kernel.elf: $(KERNELOBJECTS)
 	$(LD) $(LDFLAGS) -T $(SRCDIR)/kernel/linkerscript.ld \
 		-b $(ELF_FORMAT) $^ -o $@
 
+src/kernel/%.o:	src/kernel/%.c	
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(KERNELCFLAGS) -c $< -o $@
+
 .PHONY: depend
 depend:
 	$(MAKEDEPEND) -f depend.mk -- $(patsubst %,-%,$(subst -,,$(CFLAGS))) \

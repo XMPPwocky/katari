@@ -21,6 +21,9 @@ ASFLAGS		= -I$(IDIR) -march=$(ARCH) -mcpu=$(CPU) -mfpu=$(FPU)
 
 LDFLAGS		= $(patsubst %,--defsym %,$(SYM_DEFINES))
 
+KERNELCFLAGS	= 
+KERNELASFLAGS	= 
+
 DEFINES		=
 C_DEFINES	= $(DEFINES)
 SYM_DEFINES	= $(DEFINES)
