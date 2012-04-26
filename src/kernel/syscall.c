@@ -29,7 +29,7 @@ static inline struct Thread *syscall_invalid(struct Thread *thread) {
 	print(tid_str);
 	print(" did an invalid syscall!\r\n");
 
-	SYSCALL_RETURN(thread, SC_RESULT_INVALIDSC);
+	SYSCALL_RETURN(thread, SC_RESULT_NOSUCHCALL);
 };
 
 struct Thread *do_syscall(struct Thread *thread) {
