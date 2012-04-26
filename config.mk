@@ -54,7 +54,7 @@ endif
 
 ifeq ($(ARCH), armv7-a)
 ELF_FORMAT	= elf32-littlearm
-DEFINES		+= ARCH_ARM=1 ARCH_ARMV7A=1 WORD_SIZE=4
+DEFINES		+= ARCH_ARMV7A=1
 endif
 
 AS              = $(CROSS_COMPILE)as

@@ -1,4 +1,5 @@
 #include "kernel/kernel.h"
+#include "kernel/print.h"
 
 void print(char *msg) {
 	for (; *msg != 0; msg++) {

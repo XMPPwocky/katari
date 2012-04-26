@@ -1,4 +1,5 @@
 #pragma once
+#include "arch.h"
 
 #define NULL ((void *)0)
 
@@ -18,5 +19,6 @@ typedef unsigned long long uint64_t;
 #endif
 
 #ifdef ARCH_ARMV7A
+typedef uint32_t uint_fast32_t;
 typedef uint32_t register_t;
 #endif

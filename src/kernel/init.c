@@ -2,6 +2,7 @@
 #include "kernel/exception.h"
 #include "kernel/thread.h"
 #include "kernel/util.h"
+#include "kernel/print.h"
 
 extern void dostuff(void);
 

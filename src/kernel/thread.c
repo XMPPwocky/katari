@@ -1,5 +1,6 @@
 #include	"kernel/kernel.h"
 #include	"kernel/thread.h"
+#include	"kernel/panic.h"
 
 semaphore_t thread_table_lock = 0;
 struct Thread *thread_table[MAX_THREADS];

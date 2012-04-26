@@ -3,10 +3,6 @@
 #include	"kernel/kernel.h"
 #include	"kernel/exception.h"
 
-typedef int tid_t;
-
-#define MAX_THREADS 65536
-
 struct ThreadState {
 	register_t retstate[2]; /* LR and CPSR */
 	register_t registers[15]; /* r0-r14 */
