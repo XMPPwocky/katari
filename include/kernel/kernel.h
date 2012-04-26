@@ -1,5 +1,7 @@
 #pragma once
 
+#define	KATARI_API_VERSION 0
+
 #include "bool.h"
 #include "types.h"
 #include "kernel/breakpoint.h"

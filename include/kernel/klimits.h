@@ -1,0 +1,11 @@
+#pragma once
+
+#define MAX_THREADS 65536
+#define MAX_CONTEXTS 65536
+#define MAX_PORTS 65536
+
+#define MAX_TID (MAX_THREADS - 1)
+#define MAX_CID (MAX_CONTEXTS - 1)
+#define MAX_PID (MAX_PORTS - 1)
+
+#define MAX_THREADS_PER_CONTEXT 128
