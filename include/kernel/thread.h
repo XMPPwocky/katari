@@ -2,6 +2,15 @@
 
 #include	"kernel/kernel.h"
 #include	"kernel/exception.h"
+#include	"kernel/thread.h"
+
+typedef BITMAP(MAX_TID) threadmask_t;
+
+enum ThreadStatus {
+	THREAD_STATUS_BLOCKED,
+	THREAD_STATUS_RUNNABLE,
+	THREAD_STATUS_RUNNING
+};
 
 struct ThreadState {
 	register_t retstate[2]; /* LR and CPSR */
@@ -13,6 +22,11 @@ struct Thread {
 	
 	tid_t id;
 	semaphore_t lock;
+	enum ThreadStatus status;
+
+	void *mbb;
+	tid_t blocked_on;
+	threadmask_t recvmask;
 };
 
 extern semaphore_t thread_table_lock;
