@@ -36,7 +36,7 @@ struct Thread *do_syscall(struct Thread *thread) {
 	semaphore_P(thread->lock);
 
 	switch (thread->state->registers[12]) {
-		case SC_TYPE_NOP:
+		case SC_CALL_NOP:
 			return syscall_nop(thread);
 			break;
 

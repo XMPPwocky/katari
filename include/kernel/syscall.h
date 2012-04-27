@@ -2,7 +2,7 @@
 
 #include "kernel/kernel.h"
 
-#define SC_TYPE_NOP 0
+#define SC_CALL_NOP 0
 
 #define SC_RESULT_SUCCESS 0 /* success. duh. */
 #define SC_RESULT_NOSUCHCALL 1 /* invalid syscall ID */
