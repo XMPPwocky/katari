@@ -1,6 +1,7 @@
 #include	"kernel/kernel.h"
 #include	"kernel/thread.h"
 #include	"kernel/panic.h"
+#include	"kernel/message.h"
 
 semaphore_t thread_table_lock = 0;
 struct Thread *thread_table[MAX_THREADS];
@@ -33,17 +34,24 @@ struct Thread *create_thread(register_t lr, register_t cpsr) {
 	};
 
 	struct Thread *thread = kmalloc(sizeof (struct Thread));
-	thread->state = kmalloc(sizeof (struct ThreadState));
-	thread->id = id;
-	thread->lock = 0;
 
+	thread->state = kmalloc(sizeof (struct ThreadState));
 	thread->state->retstate[0] = lr;
 	thread->state->retstate[1] = cpsr;
+
+	thread->id = id;
+	thread->lock = 0;
+	thread->status = THREAD_STATUS_INITIALIZING;
+
+	thread->mbb = kpagealloc(MESSAGE_PAGES);
+	thread->blocked_on = 0;
+	BITMAP_ZERO(thread->recvmask, MAX_TID);
+
 
 	int i;
 	for (i = 0; i < 15; i++) {
 		thread->state->registers[i] = 0xDEADBEEF;
-	};
+	};	
 
 	semaphore_V(thread->lock);
 	semaphore_V(thread_table_lock);
@@ -54,6 +62,7 @@ struct Thread *create_thread(register_t lr, register_t cpsr) {
 enum exception enter_thread(struct Thread *thread) {
 	semaphore_P(thread->lock);
 
+	thread->status = THREAD_STATUS_RUNNING;
 	register_t retval = _enter_thread(thread);
 
 	semaphore_V(thread->lock);
