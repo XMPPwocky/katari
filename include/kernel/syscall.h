@@ -11,7 +11,6 @@
 #define SC_RESULT_TEMPFAIL 4 /* think EAGAIN. */
 #define SC_RESULT_IHATEYOU 5 /* something's terribly wrong */
 #define SC_RESULT_OOM 6 /* Not enough memory to complete requested action */
-#define SC_RESULT_BADDRESS 7 /* Bad pointer passed to syscall */
 
 #define SYSCALL_RETURNANDSWITCH(thread, status, to) \
 	thread->state->registers[0] = status; \

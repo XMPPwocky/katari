@@ -22,7 +22,6 @@ struct Thread {
 	struct ThreadState *state;
 	
 	tid_t id;
-	cid_t context;
 	semaphore_t lock;
 	enum ThreadStatus status;
 

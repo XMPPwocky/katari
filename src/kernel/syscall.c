@@ -21,24 +21,6 @@ static inline struct Thread *syscall_version(struct Thread *thread) {
 	SYSCALL_RETURN(thread, SC_RESULT_SUCCESS);
 };
 
-static inline struct Thread *syscall_receive(struct Thread *thread) {
-	void *mask_ptr = thread->state->registers[0];
-	if (!context_access_check(thread->context, mask_ptr, ACCESS_READ)) {
-		SYSCALL_RETURN(thread, SC_RESULT_BADDRESS);
-	};
-
-	tid_t switchto_tid = thread->state->registers[1];
-	if (switchto_tid > MAX_TID) {
-		SYSCALL_RETURN(thread, SC_RESULT_NOSUCHTHREAD);
-	};
-
-	semaphore_P(thread_table_lock);
-	struct Thread *switchto = thread_table[switchto_tid];
-	semaphore_P(switchto->lock);
-	semaphore_V(thread_table_lock);
-
-};
-
 static inline struct Thread *syscall_invalid(struct Thread *thread) {
 	char tid_str[10];
 	inttostr(thread->id, tid_str, 10);
