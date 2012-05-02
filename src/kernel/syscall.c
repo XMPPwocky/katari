@@ -15,12 +15,6 @@ static inline struct Thread *syscall_nop(struct Thread *thread) {
 	SYSCALL_RETURN(thread, SC_RESULT_SUCCESS);
 };
 
-static inline struct Thread *syscall_version(struct Thread *thread) {
-	thread->state->registers[1] = KATARI_API_VERSION;
-
-	SYSCALL_RETURN(thread, SC_RESULT_SUCCESS);
-};
-
 static inline struct Thread *syscall_invalid(struct Thread *thread) {
 	char tid_str[10];
 	inttostr(thread->id, tid_str, 10);

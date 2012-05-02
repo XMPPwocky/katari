@@ -1,7 +1,10 @@
 #pragma once
 
-#define MASK_BITAT(bit) 1 << bit
-#define MASK_BYTEAT(byte) 0xFF << (byte*8)
+#define MASK_BITAT(bit) (1 << bit)
+#define MASK_BYTEAT(byte) (0xFF << (byte*8))
+#define MASK_BITSAFTER(count) (0xFFFFFFFF << count)
+#define MASK_BITSBEFORE(count) (~MASK_BITSAFTER(count))
+#define MASK_BITSFROM(start, end) (MASK_BITSAFTER(start)&MASK_BITSBEFORE(end))
 
 typedef uint64_t bitmap_basetype;
 #define BITMAP_BASETYPE_BYTES (sizeof (bitmap_basetype))

@@ -11,6 +11,9 @@ static struct HeapRegion *heap = &heap_initial_region;
 /* And a pointer to the end. */
 static struct HeapRegion *heap_last_region = &heap_initial_region;
 
+semaphore_t mheap_lock = 0;
+static void **mheap = NULL;
+
 /* Lock for manipulating any HeapRegion in the HeapRegion linked list. */
 semaphore_t heap_lock = 0; /* Not set up yet, so lock it for safety. */
 
@@ -173,7 +176,7 @@ void *kmalloc(size_t size) {
 	return kpagealloc((size+PAGE_SIZE-1)/PAGE_SIZE);
 };
 
-void kpagefree(void *ptr) {
+static void kpagefree(void *ptr) {
 	/* We may want to build a hash table of addresses to heap regions
 	 * to speed up freeing
 	 * (right now we have to walk the heap region list */
@@ -207,6 +210,13 @@ void kpagefree(void *ptr) {
 	semaphore_V(heap_lock);
 };
 
+static void kmfree(void *ptr) {
+	;
+};
 void kfree(void *ptr) {
-	kpagefree(ptr);
+	if ((unsigned int)ptr % PAGE_SIZE) {
+		kmfree(ptr);
+	} else {
+		kpagefree(ptr);
+	};
 };

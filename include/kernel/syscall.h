@@ -3,14 +3,24 @@
 #include "kernel/kernel.h"
 
 #define SC_CALL_NOP 0
+#define SC_CALL_INFO 1
+#define SC_CALL_ALLOCPAGE 2 /* privileged */
+#define SC_CALL_FREEPAGE 3  /* privileged */
+#define SC_CALL_ADDTHREAD 4 /* privileged */
+#define SC_CALL_DELTHREAD 5 /* privileged */
+#define SC_CALL_SEND 6
+#define SC_CALL_RECV 7
+#define SC_CALL_CANSEND 8
+#define SC_CALL_CANRECV 9
 
 #define SC_RESULT_SUCCESS 0 /* success. duh. */
 #define SC_RESULT_NOSUCHCALL 1 /* invalid syscall ID */
 #define SC_RESULT_NOSUCHTHREAD 2 /* no such thread. duh. */
-#define SC_RESULT_NOSUCHCONTEXT 3 /* you can figure this out */
 #define SC_RESULT_TEMPFAIL 4 /* think EAGAIN. */
 #define SC_RESULT_IHATEYOU 5 /* something's terribly wrong */
 #define SC_RESULT_OOM 6 /* Not enough memory to complete requested action */
+#define SC_RESULT_PRIVILEGE 7 /* unprivileged thread tried to make 
+			       privileged syscall */
 
 #define SYSCALL_RETURNANDSWITCH(thread, status, to) \
 	thread->state->registers[0] = status; \

@@ -18,7 +18,8 @@ void threadtable_init(void) {
 	return;
 };
 
-struct Thread *create_thread(register_t lr, register_t cpsr) {
+struct Thread *create_thread(register_t lr, register_t cpsr,
+		void *translation_tables) {
 	semaphore_P(thread_table_lock);
 	
 	tid_t id;
@@ -43,10 +44,13 @@ struct Thread *create_thread(register_t lr, register_t cpsr) {
 	thread->lock = 0;
 	thread->status = THREAD_STATUS_INITIALIZING;
 
-	thread->mbb = kpagealloc(MESSAGE_PAGES);
+	thread->asid = 0;
+	thread->translation_tables = translation_tables;
+
+	thread->isblocked = false;
 	thread->blocked_on = 0;
 	BITMAP_ZERO(thread->recvmask, MAX_TID);
-
+	BITMAP_ZERO(thread->whackmask, MAX_TID);
 
 	int i;
 	for (i = 0; i < 15; i++) {
@@ -63,7 +67,7 @@ enum exception enter_thread(struct Thread *thread) {
 	semaphore_P(thread->lock);
 
 	thread->status = THREAD_STATUS_RUNNING;
-	register_t retval = _enter_thread(thread);
+	register_t retval = _enter_thread((register_t)thread);
 
 	semaphore_V(thread->lock);
 

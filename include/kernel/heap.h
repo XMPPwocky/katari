@@ -25,5 +25,4 @@ extern void new_heap_region(void *address);
 
 extern void *kpagealloc(size_t numpages);
 extern void *kmalloc(size_t size);
-extern void kpagefree(void *ptr);
 extern void kfree(void *ptr);

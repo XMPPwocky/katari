@@ -25,16 +25,21 @@ struct Thread {
 	semaphore_t lock;
 	enum ThreadStatus status;
 
-	void *mbb;
+	uint8_t asid; /* zero if unassigned */
+	void *translation_tables; /* physical address! */
+
+	bool isblocked;
 	tid_t blocked_on;
 	threadmask_t recvmask;
+	threadmask_t whackmask;
 };
 
 extern semaphore_t thread_table_lock;
 extern struct Thread *thread_table[MAX_THREADS];
 
 extern void threadtable_init(void);
-extern struct Thread *create_thread(register_t lr, register_t cpsr);
+extern struct Thread *create_thread(register_t lr, register_t cpsr, 
+		void *translation_tables);
 
 extern enum exception enter_thread(struct Thread *t);
-extern register_t _enter_thread(struct Thread *t);
+extern register_t _enter_thread(register_t thread);
