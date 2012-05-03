@@ -23,6 +23,6 @@ extern void heap_init(void *start, size_t size);
 extern void add_memory_to_heap(void *start, size_t size);
 extern void new_heap_region(void *address);
 
-extern void *kpagealloc(size_t numpages);
+extern void *kpagealloc(size_t numpages, unsigned char alignment);
 extern void *kmalloc(size_t size);
 extern void kfree(void *ptr);

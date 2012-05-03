@@ -1,25 +1,32 @@
 #pragma once
 
 #include "kernel/kernel.h"
+#include "kernel/lock.h"
 
 #define	PAGE_SIZE	4096
+#define TTBCR_N			1
 
-/* VMSAv7 first-level descriptor formats */
-/* Holy bitwise arithmetic, Batman! */
-#define TRANSLATION_SECTION_DESCRIPTOR(baseaddr, ns, ng, s, ap, tex, imp, \
-		domain, xn, c, b) ( \
-			(0b10 & MASK_BITSFROM(0, 1)) | \
-			((b << 2) & MASK_BITAT(2)) | \
-			((c << 3) & MASK_BITAT(3)) | \
-			((xn << 4) & MASK_BITAT(4)) | \
-			((domain << 5) & MASK_BITSFROM(5, 8)) | \
-			((imp << 9) & MASK_BITAT(9)) | \
-			(((ap & MASK_BITSFROM(0, 1)) \
-			  << 10) & MASK_BITSFROM(10, 11)) | \
-			((tex << 12) & MASK_BITSFROM(12, 14)) | \
-			(((ap & MASK_BITAT(2)) << 15) & MASK_BITAT(15)) | \
-			((s << 16) & MASK_BITAT(16)) | \
-			((ng << 17) & MASK_BITAT(17)) | \
-			((0b0 << 18) & MASK_BITAT(18)) | \
-			((ns << 19) & MASK_BITAT(19)) | \
-			((base_addr & MASK_BITSFROM(20, 31))))
+/* translation tables sizes in number of entries, not bytes! */
+#define GLOBAL_TRANSLATION_TABLE_ENTRIES	4096
+#define ADDRSPACE_TRANSLATION_TABLE_ENTRIES	(GLOBAL_TRANSLATION_TABLE_SIZE \
+		/ ((1 << TTBCR_N)))
+
+extern semaphore_t global_translation_tables_lock;
+extern void *global_translation_tables;
+
+enum AccessType {
+	USER_READ,
+	USER_WRITE,
+	PRIVILEGED_READ,
+	PRIVILEGED_WRITE
+};
+
+extern bool can_access(void *address, enum AccessType type);
+
+extern uint32_t va2pa(void *address, enum AccessType type);
+
+struct AddressSpace {
+	semaphore_t lock;
+	uint8_t current_asid;
+	void *translation_tables; /* physical address! */
+};

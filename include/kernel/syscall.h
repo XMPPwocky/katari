@@ -3,15 +3,14 @@
 #include "kernel/kernel.h"
 
 #define SC_CALL_NOP 0
-#define SC_CALL_INFO 1
-#define SC_CALL_ALLOCPAGE 2 /* privileged */
-#define SC_CALL_FREEPAGE 3  /* privileged */
-#define SC_CALL_ADDTHREAD 4 /* privileged */
-#define SC_CALL_DELTHREAD 5 /* privileged */
-#define SC_CALL_SEND 6
-#define SC_CALL_RECV 7
-#define SC_CALL_CANSEND 8
-#define SC_CALL_CANRECV 9
+#define SC_CALL_ALLOCPAGE 1 /* privileged */
+#define SC_CALL_FREEPAGE 2  /* privileged */
+#define SC_CALL_ADDTHREAD 3 /* privileged */
+#define SC_CALL_DELTHREAD 4 /* privileged */
+#define SC_CALL_SEND 5
+#define SC_CALL_RECV 6
+#define SC_CALL_CANSEND 7
+#define SC_CALL_CANRECV 8
 
 #define SC_RESULT_SUCCESS 0 /* success. duh. */
 #define SC_RESULT_NOSUCHCALL 1 /* invalid syscall ID */

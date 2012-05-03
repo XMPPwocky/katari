@@ -19,7 +19,7 @@ void threadtable_init(void) {
 };
 
 struct Thread *create_thread(register_t lr, register_t cpsr,
-		void *translation_tables) {
+		struct AddressSpace *addrspace) {
 	semaphore_P(thread_table_lock);
 	
 	tid_t id;
@@ -39,23 +39,22 @@ struct Thread *create_thread(register_t lr, register_t cpsr,
 	thread->state = kmalloc(sizeof (struct ThreadState));
 	thread->state->retstate[0] = lr;
 	thread->state->retstate[1] = cpsr;
+	unsigned char i;
+	for (i = 0; i < 15; i++) {
+		thread->state->registers[i] = 0xDEADBEEF;
+	};	
 
 	thread->id = id;
 	thread->lock = 0;
 	thread->status = THREAD_STATUS_INITIALIZING;
 
-	thread->asid = 0;
-	thread->translation_tables = translation_tables;
+	thread->addrspace = addrspace;
+	
+	thread->block_type = THREAD_BLOCKED_NOTBLOCKED;
+	BITMAP_ZERO(thread->block_mask, MAX_TID);
 
-	thread->isblocked = false;
-	thread->blocked_on = 0;
-	BITMAP_ZERO(thread->recvmask, MAX_TID);
-	BITMAP_ZERO(thread->whackmask, MAX_TID);
+	BITMAP_ZERO(thread->pending_notifies, MAX_TID);
 
-	int i;
-	for (i = 0; i < 15; i++) {
-		thread->state->registers[i] = 0xDEADBEEF;
-	};	
 
 	semaphore_V(thread->lock);
 	semaphore_V(thread_table_lock);

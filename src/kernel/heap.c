@@ -81,7 +81,7 @@ void new_heap_region(void *address) {
 	semaphore_V(heap_lock);
 };
 	
-void *kpagealloc(size_t size) {
+void *kpagealloc(size_t size, unsigned char alignment) {
 	semaphore_P(heap_lock);
 
 	struct HeapRegion *current_region = heap;
@@ -99,6 +99,14 @@ void *kpagealloc(size_t size) {
 				continue;
 			} else {
 				/* This page is free */
+				
+				if (run == 0) {	/* would we be starting a run? */
+					if ( ((unsigned int)((char *)current_region->address)) & \
+							MASK_BITSBEFORE(alignment)) {
+						continue; /* not aligned. */
+					};
+				};
+
 				if (++run >= size) {
 					/* and our current run is big enough
 					 * for the requested size! */
@@ -173,7 +181,7 @@ void *kpagealloc(size_t size) {
 };
 
 void *kmalloc(size_t size) {
-	return kpagealloc((size+PAGE_SIZE-1)/PAGE_SIZE);
+	return kpagealloc((size+PAGE_SIZE-1)/PAGE_SIZE, 0);
 };
 
 static void kpagefree(void *ptr) {
