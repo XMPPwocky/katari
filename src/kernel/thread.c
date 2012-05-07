@@ -18,7 +18,7 @@ void threadtable_init(void) {
 	return;
 };
 
-struct Thread *create_thread(register_t lr, register_t cpsr,
+struct Thread *create_thread(register_t lr, register_t cpsr, bool privileged,
 		struct AddressSpace *addrspace) {
 	semaphore_P(thread_table_lock);
 	
@@ -39,6 +39,7 @@ struct Thread *create_thread(register_t lr, register_t cpsr,
 	thread->state = kmalloc(sizeof (struct ThreadState));
 	thread->state->retstate[0] = lr;
 	thread->state->retstate[1] = cpsr;
+	thread->privileged = privileged;
 	unsigned char i;
 	for (i = 0; i < 15; i++) {
 		thread->state->registers[i] = 0xDEADBEEF;
@@ -62,6 +63,30 @@ struct Thread *create_thread(register_t lr, register_t cpsr,
 	return thread;
 };
 
+tid_t add_to_thread_table(struct Thread *thread) {
+	semaphore_P(thread_table_lock);
+	semaphore_P(thread->lock);
+
+	tid_t id;
+        bool found = false;
+        for (id = 0; id < MAX_THREADS; id++) {
+                if (thread_table[id] == NULL) {
+                        found = true;
+                        break;
+                };
+        };
+        if (!found) {
+                panic("Out of thread table slots!");
+        };
+
+	thread->id = id;
+
+	semaphore_V(thread->lock);
+	semaphore_V(thread_table_lock);
+
+	return id;
+};
+	
 enum exception enter_thread(struct Thread *thread) {
 	semaphore_P(thread->lock);
 

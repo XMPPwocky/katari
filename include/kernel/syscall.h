@@ -3,8 +3,8 @@
 #include "kernel/kernel.h"
 
 #define SC_CALL_NOP 0
-#define SC_CALL_ALLOCPAGE 1 /* privileged */
-#define SC_CALL_FREEPAGE 2  /* privileged */
+#define SC_CALL_ALLOCPAGES 1 /* privileged */
+#define SC_CALL_FREEPAGES 2  /* privileged */
 #define SC_CALL_ADDTHREAD 3 /* privileged */
 #define SC_CALL_DELTHREAD 4 /* privileged */
 #define SC_CALL_SEND 5
@@ -20,6 +20,7 @@
 #define SC_RESULT_OOM 6 /* Not enough memory to complete requested action */
 #define SC_RESULT_PRIVILEGE 7 /* unprivileged thread tried to make 
 			       privileged syscall */
+#define SC_RESULT_BADDRESS 8 /* Bad address */
 
 #define SYSCALL_RETURNANDSWITCH(thread, status, to) \
 	thread->state->registers[0] = status; \

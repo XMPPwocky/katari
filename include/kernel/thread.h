@@ -29,6 +29,7 @@ struct Thread {
 	struct ThreadState *state;
 	
 	tid_t id;
+	bool privileged;
 	semaphore_t lock;
 	enum ThreadStatus status;
 
@@ -44,8 +45,9 @@ extern semaphore_t thread_table_lock;
 extern struct Thread *thread_table[MAX_THREADS];
 
 extern void threadtable_init(void);
-extern struct Thread *create_thread(register_t lr, register_t cpsr, 
-		struct AddressSpace *addrspace);
+extern struct Thread *create_thread(register_t lr, register_t cpsr,
+		bool privileged, struct AddressSpace *addrspace);
 
+extern tid_t add_to_thread_table(struct Thread *thread);
 extern enum exception enter_thread(struct Thread *t);
 extern register_t _enter_thread(register_t thread);
