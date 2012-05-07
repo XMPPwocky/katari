@@ -9,5 +9,4 @@
 #include "kernel/ktypes.h"
 #include "kernel/klimits.h"
 #include "kernel/breakpoint.h"
-#include "kernel/heap.h"
 #include "kernel/lock.h"

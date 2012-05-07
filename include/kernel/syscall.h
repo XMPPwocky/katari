@@ -3,8 +3,6 @@
 #include "kernel/kernel.h"
 
 #define SC_CALL_NOP 0
-#define SC_CALL_ALLOCPAGES 1 /* privileged */
-#define SC_CALL_FREEPAGES 2  /* privileged */
 #define SC_CALL_ADDTHREAD 3 /* privileged */
 #define SC_CALL_DELTHREAD 4 /* privileged */
 #define SC_CALL_SEND 5

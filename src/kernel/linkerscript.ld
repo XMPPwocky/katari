@@ -15,6 +15,5 @@ SECTIONS
 		AT ( ADDR ( .main ) + SIZEOF ( .main ) )
 		{ *(.bss) }
 	
-	__heap_start_addr = ALIGN(., 4);
-	__heap_size = ( __virt_start_addr + __memory_size ) - __heap_start_addr;
+	__virt_kernel_end_addr = ALIGN(., 1024*1024); /* 1MB aligned */
 }	

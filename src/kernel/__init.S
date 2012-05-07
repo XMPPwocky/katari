@@ -53,9 +53,7 @@ initial_faults_loop:
 	.pool
 ram_sections:
 	ldr	r2, =__phys_start_addr /* must be 1MB-aligned */
-	ldr	r3, =__memory_size
-	ldr	r4, =__virt_start_addr
-	add	r3, r4, r3
+	ldr	r3, =__virt_kernel_end_addr
 	ldr	r5, =0b00010001010000001110
 ram_sections_loop:
 	cmp	r3, r1
