@@ -3,7 +3,7 @@
 #include "kernel/kernel.h"
 #include "kernel/vm.h"
 
-#define	HEAP_REGION_SIZE	1048576 /* 1M */
+#define	HEAP_REGION_SIZE	(4*1024*1024) /* 4MB */
 #define	PAGES_PER_HEAP_REGION	(HEAP_REGION_SIZE/PAGE_SIZE)
 
 struct HeapRegion {
