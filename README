@@ -2,13 +2,12 @@ Katari is a nanokernel-based OS for ARM.
 
 What works:
  * Booting on AM335x(assisted by TI StarterWare bootloader)
- * Printing to serial on AM335x (currently in kernel for debugging purposes,
- 	will be removed soon)
  * Context switching
+ * Syscall mechanism
+ * The MMU!
 
 What doesn't:
  * Executable loading
  * Floating point (VFP/NEON)
  * Systems other than AM335x
- * IPC, and syscalls in general
- * Virtual memory
+ * Actual syscalls
