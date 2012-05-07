@@ -4,6 +4,9 @@
 #include "kernel/util.h"
 
 void init(void) {
+	semaphore_V(global_translation_tables_lock);
+
 	exception_init();
+	
 	threadtable_init();
 };

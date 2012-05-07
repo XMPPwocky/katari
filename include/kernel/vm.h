@@ -21,9 +21,14 @@ enum AccessType {
 	PRIVILEGED_WRITE
 };
 
-extern bool can_access(void *address, enum AccessType type);
+extern bool va_access_check(void *address, enum AccessType type);
 
-extern uint32_t va2pa(void *address, enum AccessType type);
+extern bool va_is_global(void *va);
+
+extern uint32_t va2pa_priv_read(void *va);
+extern uint32_t va2pa_priv_write(void *va);
+extern uint32_t va2pa_priv_read(void *va);
+extern uint32_t va2pa_user_write(void *va);
 
 struct AddressSpace {
 	semaphore_t lock;

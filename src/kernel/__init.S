@@ -8,7 +8,7 @@ __init:
 	cpsid	if, #0x13
 
 	bl	__generate_global_translation_tables
-	ldr	r0, =__global_translation_tables
+	ldr	r0, =global_translation_tables
 	ldr	r1, =0b01010
 	orr	r0, r0, r1
 	mcr	p15, 0, r0, c2, c0, 0 /* set TTBR0 (temporarily) */
@@ -38,7 +38,7 @@ __init:
 .section .init
 .align 2
 __generate_global_translation_tables:
-	ldr	r0, =__global_translation_tables
+	ldr	r0, =global_translation_tables
 	ldr	r1, =0 /* current virtual address */
 initial_faults:
 	ldr	r2, =0
@@ -81,5 +81,6 @@ trailing_faults_loop:
 .arm
 .section .phys_bss
 .balign 16384
-__global_translation_tables:
+.global global_translation_tables
+global_translation_tables:
 	.space	4 * 4096

@@ -2,14 +2,14 @@
 #include "kernel/syscall.h"
 #include "kernel/thread.h"
 #include "kernel/util.h"
+#include "kernel/vm.h"
 
 static inline struct Thread *syscall_nop(struct Thread *thread) {
 	SYSCALL_RETURN(thread, SC_RESULT_SUCCESS);
 };
 
 static inline struct Thread *syscall_addthread(struct Thread *thread) {
-	/* The pointer to the thread struct passed in here MUST be global,
-	 * (e.g. in the higher half of address space). */
+	/* The pointer to the thread struct passed in here MUST be global. */
 
 	if (!(thread->privileged)) {
 		SYSCALL_RETURN(thread, SC_RESULT_PRIVILEGE);
@@ -17,6 +17,9 @@ static inline struct Thread *syscall_addthread(struct Thread *thread) {
 
 	struct Thread *newthread = (void *)thread->state->registers[0];
 
+	if (!va_is_global(newthread)) {
+		SYSCALL_RETURN(thread, SC_RESULT_BADDRESS);
+	};
 
 	thread->state->registers[1] = add_to_thread_table(newthread);
 
