@@ -49,7 +49,8 @@ CPU	= cortex-a8
 ARCH	= armv7-a
 FPU	= vfp3
 DEFINES	+= SOC_AM335X=1
-SYM_DEFINES	+= __memory_start_addr=0x80000000 __memory_size=0x10000000
+SYM_DEFINES	+= __phys_start_addr=0x80000000 __memory_size=0x10000000 \
+			__virt_start_addr=0x80000000
 endif
 
 ifeq ($(ARCH), armv7-a)
